@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validador de Inscripciones</title>
+</head>
+<body>
+    <h2>Formulario de Inscripción</h2>
+
+    <input type="text" id="nombre" placeholder="Nombre Completo" style="width:300px; height:30px;"><br><br>
+    <input type="text" id="cedula" placeholder="Número de Cédula" style="width:300px; height:30px;"><br><br>
+    <input type="text" id="correo" placeholder="Correo Electrónico" style="width:300px; height:30px;"><br><br>
+
+    <button onclick="registrar()" style="width: 150px; height: 40px;">Registrar</button>
+
+    <div id="mensaje" style="margin-top:20px; color: blue; font-size: 20px;"></div>
+    <div id="listado" style="margin-top: 20px; font-size: 18px;"></div>
+    
+
+    <script>
+        let inscritos= [];
+
+        function registrar() {
+            let nombre = document.getElementById("nombre").value.trim();
+            let cedula = document.getElementById("cedula").value.trim();
+            let correo = document.getElementById("correo").value.trim();
+
+            // Validar campos vacíos.
+            if (nombre === "" || cedula === "" || correo === "") {
+                document.getElementById("mensaje").innerHTML ="Todos los campos son obligatorios ❌.";
+                return;
+            }
+
+            // Validar que cédula sea número.
+            if (isNaN(cedula)) {
+                document.getElementById("mensaje").innerHTML ="La cédula debe ser un número ❌.";
+                return;
+            }
+
+            // Validar Correo.
+            if (!correo.includes("@") || !correo.includes(".")) {
+                document.getElementById("mensaje").innerHTML ="Correo Inválido ❌.";
+                return;
+            }
+
+            // Validar que no se repita cédula o correo.
+            let existe = inscritos.find(usuario => usuario.cedula === cedula || usuario.correo === correo);
+            if (existe) {
+                document.getElementById("mensaje").innerHTML = "La cédula o el correo ya estan registrados ❌.";
+                return;
+            }
+            
+            // Guardar usuario.
+            inscritos.push({nombre, cedula, correo});
+
+            document.getElementById("mensaje").innerHTML = "Registro exitoso ✅.";
+
+            mostrarInscritos();
+        }
+
+        function mostrarInscritos() {
+            let texto ="<h3>Listado de Inscritos</h3>";
+            texto += "<ul>";
+            
+            inscritos.forEach(u => {
+                texto += `<li>${u.nombre} - ${u.cedula} - ${u.correo}</li>`;
+            });
+
+            texto += "</ul>";
+
+            document.getElementById("listado").innerHTML = texto;
+        }
+    </script>
+    
+</body>
+</html>
